@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker'
 
 export default function TabOneScreen() {
 
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState('')
 
   let openImagePickerAsync = async() => {
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -17,12 +17,16 @@ export default function TabOneScreen() {
     }
 
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log(pickerResult)
+
+    setSelectedImage(pickerResult)
+
   }
+
+  console.log('Image Url', selectedImage)
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={styles.logo} />
+      <Image source={{ uri: selectedImage.uri }} style={styles.logo} />
       <Text style={styles.textStyle}>To share photos with your friends, click the button</Text>
 
       <TouchableOpacity
