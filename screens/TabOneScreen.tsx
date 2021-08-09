@@ -1,15 +1,34 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet } from 'react-native';
+import { Image, View, Text, TouchableOpacity} from 'react-native'
+import logo from '../assets/images/image-share.jpeg'
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import * as ImagePicker from 'expo-image-picker'
 
 export default function TabOneScreen() {
+
+  const [selectedImage, setSelectedImage] = useState(null)
+
+  let openImagePickerAsync = async() => {
+    let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false){
+      alert('Permission to access camera roll is required!')
+      return
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    console.log(pickerResult)
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <Image source={logo} style={styles.logo} />
+      <Text style={styles.textStyle}>To share photos with your friends, click the button</Text>
+
+      <TouchableOpacity
+        onPress={openImagePickerAsync}
+        style={styles.pickPhotoButton}
+        ><Text style={styles.buttonText}>Pick a photo</Text></TouchableOpacity>
     </View>
   );
 }
@@ -17,16 +36,28 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
-  title: {
+  textStyle: {
+    color: '#888',
+    fontSize: 16,
+    marginHorizontal: 15
+  },
+  logo: {
+    width: 305,
+    height: 150,
+    marginBottom: 10
+  },
+  pickPhotoButton: {
+    backgroundColor: 'green',
+    marginTop: 20,
+    padding: 20,
+    borderRadius: 5
+  },
+  buttonText: {
     fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+    color: '#fff',
+  }
+})
